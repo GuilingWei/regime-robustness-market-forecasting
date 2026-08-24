@@ -35,8 +35,14 @@ XGBoost/Ridge).
 - OHLCV-derived features are used as a proxy for true limit-order-book input;
   this is an adaptation of MLPLOB, not a faithful reproduction on its original
   input type.
-- Regimes are defined via a rolling realized-volatility threshold (see
-  `notebooks/01_eda.ipynb` for the exact definition and justification).
+- Regimes are defined via a rolling (168h) realized-volatility threshold —
+  calm = below the 25th percentile, stress = above the 85th percentile.
+  Final windows: calm = 2023-07-17 to 2023-08-17 (~31 days), stress =
+  2025-03-01 to 2025-03-17 (~16 days). See `src/regime_analysis.py` and
+  `results/regime_volatility.png` for the full analysis. The calm window is
+  short (~570 usable hourly rows after feature warmup), which is a genuine
+  data-scarcity limitation worth keeping in mind when interpreting model
+  performance.
 - Crypto market dynamics differ from traditional equities/futures; findings
   here should be read as evidence about the *mechanism* (regime-shift
   degradation), not as claims that transfer numerically to other asset classes.

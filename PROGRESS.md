@@ -4,7 +4,7 @@
 - [x] Download BTCUSDT 1h klines
 - [x] Download ETHUSDT 1h klines
 - [x] Sanity-check both files (correct row count, no gaps, chronological)
-- [ ] Decide regime definition (rolling volatility threshold vs event window) — document reasoning in notebook
+- [x] Decide regime definition (rolling volatility threshold vs event window) — document reasoning in notebook
 
 ## Day 2: EDA + leak-free feature engineering
 - [ ] Plot price/volume for both symbols, confirm regimes look visually distinct

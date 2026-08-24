@@ -87,14 +87,25 @@ pip install -r requirements.txt
 
 ## Results
 
-_(to be filled in as the project progresses)_
+### Same-regime baseline (trained and tested within the calm window)
 
-| Model    | Same-regime score | Cross-regime score | Degradation |
-|----------|-------------------|---------------------|-------------|
-| GARCH    | -                 | -                   | -           |
-| XGBoost  | -                 | -                   | -           |
-| MLPLOB   | -                 | -                   | -           |
+| Model   | R²      | Directional Accuracy | MSE       | n   |
+|---------|---------|-----------------------|-----------|-----|
+| Ridge   | -0.067  | 55.4%                 | 3.14e-06  | 112 |
+| XGBoost | -0.350  | 50.9%                 | 3.97e-06  | 112 |
 
+GARCH 1-step volatility forecast: 0.00281 (actual test-window return std: 0.00172)
+
+Negative R² is expected here — next-hour crypto return prediction is close
+to unpredictable at this horizon and data scale (521 training rows).
+Ridge's modest directional edge (55.4% vs. XGBoost's near-random 50.9%) is
+an early instance of the "complexity doesn't help" pattern this project is
+built around: with limited data, XGBoost's added flexibility appears to
+overfit noise rather than capture signal.
+
+### Cross-regime experiment (train calm, test stress)
+
+_(to be filled in — Day 7)_
 ## What I'd try next
 
 _(to be filled in)_

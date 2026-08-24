@@ -30,6 +30,25 @@ XGBoost/Ridge).
 - Period: Jan 2023 – Aug 2026
 - Not committed to this repo — regenerate via `src/data_loader.py` (see below).
 
+## Features
+
+Twelve engineered features, all computed using only `.shift()`, `.rolling()`,
+or `.diff()` (strictly backward-looking pandas operations — no feature can
+see into the future at the row it's computed for):
+
+- **Realized volatility** (6h, 24h, 168h): rolling standard deviation of log returns
+- **Momentum** (6h, 24h, 168h): cumulative log return over each horizon
+- **Volume z-score** (168h): how unusual current volume is vs. its recent history
+- **RSI** (14-period): standard relative-strength momentum indicator
+- **Cyclical time encoding**: hour-of-day and day-of-week (sin/cos pairs),
+  deterministic from the timestamp so inherently leak-free
+
+Features are computed on the full continuous 3-year series (not per-regime
+slice) so rolling windows have proper history to draw from, before slicing
+into calm/stress windows. This leaves 745 usable rows in the calm window and
+385 in the stress window after the 168h warmup period is dropped — see
+`src/features.py` and `src/regime_analysis.py`.
+
 ## Assumptions and limitations
 
 - OHLCV-derived features are used as a proxy for true limit-order-book input;
@@ -40,9 +59,9 @@ XGBoost/Ridge).
   Final windows: calm = 2023-07-17 to 2023-08-17 (~31 days), stress =
   2025-03-01 to 2025-03-17 (~16 days). See `src/regime_analysis.py` and
   `results/regime_volatility.png` for the full analysis. The calm window is
-  short (~570 usable hourly rows after feature warmup), which is a genuine
-  data-scarcity limitation worth keeping in mind when interpreting model
-  performance.
+  short (745 usable hourly rows after feature warmup; stress has 385), which
+  is a genuine data-scarcity limitation worth keeping in mind when
+  interpreting model performance.
 - Crypto market dynamics differ from traditional equities/futures; findings
   here should be read as evidence about the *mechanism* (regime-shift
   degradation), not as claims that transfer numerically to other asset classes.

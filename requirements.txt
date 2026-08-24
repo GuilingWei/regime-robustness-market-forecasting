@@ -1,0 +1,10 @@
+pandas==2.2.2
+numpy==1.26.4
+torch==2.3.0
+xgboost==2.0.3
+arch==7.0.0
+scikit-learn==1.4.2
+matplotlib==3.8.4
+jupyter==1.0.0
+requests==2.31.0
+python-binance==1.0.19

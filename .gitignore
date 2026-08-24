@@ -1,0 +1,26 @@
+# Data (regenerate via src/data_loader.py, don't commit)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Model checkpoints / large results
+*.pt
+*.pth
+*.pkl
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/

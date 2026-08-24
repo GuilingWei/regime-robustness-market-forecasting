@@ -7,14 +7,14 @@
 - [x] Decide regime definition (rolling volatility threshold vs event window) — document reasoning in notebook
 
 ## Day 2: EDA + leak-free feature engineering
-- [ ] Plot price/volume for both symbols, confirm regimes look visually distinct
-- [ ] Implement `add_features()` in `src/features.py`
-- [ ] Verify no lookahead leakage in any feature
+- [x] Plot price/volume for both symbols, confirm regimes look visually distinct
+- [x] Implement `add_features()` in `src/features.py`
+- [x] Verify no lookahead leakage in any feature
 
 ## Day 3: Walk-forward validation harness
-- [ ] Implement `walk_forward_split()` in `src/validation.py`
-- [ ] Implement `assert_no_leakage()` + write the unit test in `tests/test_validation.py`
-- [ ] Confirm tests pass
+- [x] Implement `walk_forward_split()` in `src/validation.py`
+- [x] Implement `assert_no_leakage()` + write the unit test in `tests/test_validation.py`
+- [x] Confirm tests pass — 5/5 passing (`pytest tests/ -v`)
 
 ## Day 4: Baseline models
 - [ ] Implement GARCH baseline

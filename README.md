@@ -215,6 +215,20 @@ calibrated range during a regime shift. This directly targets the
 identified failure mode (extrapolation on an unstable feature) rather than
 adding model complexity, consistent with this project's broader finding
 that complexity is not the lever that helps here.
+
 ## What I'd try next
 
-_(to be filled in)_
+- Winsorize/cap momentum features to the training-observed range, directly
+  targeting the extrapolation failure identified in the diagnosis above.
+- Pool multiple assets (BTC + ETH) into one panel model, adding genuine
+  cross-sectional structure rather than just more single-asset rows --
+  the closer analog to how Gu, Kelly & Xiu (2020) achieve their much
+  higher R² at scale.
+- Repeat the regime experiment with multiple random seeds per model, to
+  separate genuine cross-regime degradation from training-run noise --
+  particularly relevant given the volatility-target R² instability
+  observed in the Day 7.5 side investigation.
+- Test whether the R² metric artifact identified in Day 7.5 (denominator
+  collapse on internally-homogeneous stress windows) also affected the
+  primary return-prediction results, using a scale-stable metric (MAE)
+  alongside R² throughout.

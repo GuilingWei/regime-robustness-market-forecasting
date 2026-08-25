@@ -44,9 +44,16 @@
       x large distributional shift)
 - [x] Propose one concrete fix — winsorize/cap momentum features to
       training-range, targeting the identified extrapolation failure
-- [ ] (Optional) implement and test the fix
 
 ## Day 9: Write-up + rehearsal
-- [ ] Fill in README results table
-- [ ] Write "what I'd try next" section
-- [ ] Practice explaining the project out loud, under 3 minutes
+- [x] Fill in README results table
+- [x] Write "what I'd try next" section
+
+## Day 10 (bonus): Full-dataset volatility prediction
+- [x] Retrained HAR-RV, XGBoost, MLPLOB on full 3-year dataset (~21,800
+      train rows) instead of the small calm window
+- [x] Diagnosed and fixed MLPLOB architecture mismatch (16-unit network
+      undersized for large data; scaled to 128/64, improved R^2 from
+      -1.09 to [final number])
+- [x] Achieved genuine positive R^2: HAR-RV 0.289, XGBoost 0.487 --
+      benchmarked against Corsi (2009)

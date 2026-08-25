@@ -37,10 +37,13 @@
       unlike return prediction)
 - [x] Observed severe cross-regime collapse, likely a mix of genuine
       instability and an R² metric artifact — documented, not chased further
-           
-## Day 8: Diagnose + propose fix
-- [ ] Identify which features shifted most between regimes
-- [ ] Propose one concrete fix
+
+## Day 8: Diagnose the degradation + propose a fix
+- [x] Identify which features shifted most between regimes — momentum_168h
+      identified as primary driver (highest risk_score: large Ridge weight
+      x large distributional shift)
+- [x] Propose one concrete fix — winsorize/cap momentum features to
+      training-range, targeting the identified extrapolation failure
 - [ ] (Optional) implement and test the fix
 
 ## Day 9: Write-up + rehearsal

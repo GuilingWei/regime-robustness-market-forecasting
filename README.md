@@ -179,6 +179,42 @@ this doesn't change the project's central finding -- even a target with
 real in-sample predictability shows severe degradation under regime shift,
 reinforcing rather than undermining the core thesis.
 
+## Diagnosis: why does Ridge's edge break under regime shift?
+
+Cross-referencing Ridge's learned feature weights against each feature's
+distributional shift between the calm training window and the six stress
+windows (full data in `results/degradation_diagnosis.csv`) identifies a
+clear primary driver:
+
+**`momentum_168h` (1-week cumulative return) is both Ridge's most heavily
+weighted feature and shows a large average shift (4.9 calm-window standard
+deviations) between calm and stress regimes.** Its combined risk score is
+more than 10x higher than any other feature. Mechanistically, this makes
+sense: in the calm training window, weekly momentum was small and stable
+(flat price action), so Ridge calibrated its coefficient to that narrow
+range. In stress windows, by construction, prices move sharply -- weekly
+momentum takes on values far outside anything Ridge saw during training.
+As a linear model, Ridge doesn't fail gracefully outside its training
+range; it extrapolates confidently, which likely explains why its
+directional accuracy drops below chance (49.6%) specifically under stress.
+
+Notably, `realized_vol_168h` shows the single largest distributional shift
+of any feature (12.8 std) but a near-negligible Ridge coefficient -- Ridge
+happened not to rely heavily on the most unstable feature. This appears
+to be incidental rather than by design, and is a fragility worth noting:
+a different feature set or training window could plausibly have produced
+a much worse outcome.
+
+### Proposed fix
+
+Rather than a new model architecture, the diagnosis points to a data/feature
+fix: **cap or winsorize momentum features to the range observed in
+training** (or equivalently, use a robust/rank-based transform instead of
+raw cumulative returns), so the model cannot receive inputs far outside its
+calibrated range during a regime shift. This directly targets the
+identified failure mode (extrapolation on an unstable feature) rather than
+adding model complexity, consistent with this project's broader finding
+that complexity is not the lever that helps here.
 ## What I'd try next
 
 _(to be filled in)_

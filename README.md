@@ -105,7 +105,80 @@ overfit noise rather than capture signal.
 
 ### Cross-regime experiment (train calm, test stress)
 
-_(to be filled in — Day 7)_
+### Cross-regime experiment (train on calm, test on 6 independent stress windows)
+
+Models trained once on the calm window were evaluated, unmodified, on six
+independent stress windows (a seventh candidate, 2023-03-12 to 2023-03-29,
+was excluded since it predates the calm training window). Full results in
+`results/regime_experiment_results.csv`.
+
+| Model   | Same-regime DirAcc | Avg-stress DirAcc | Delta  |
+|---------|---------------------|---------------------|--------|
+| Ridge   | 55.4%               | 49.6%               | -5.8pp |
+| XGBoost | 50.9%               | 51.4%               | +0.5pp |
+| MLPLOB  | 51.8%               | 50.4%               | -1.4pp |
+
+**Key finding: Ridge is the only model with a genuine in-sample directional
+edge (55.4%, meaningfully above chance), and it is also the only model that
+loses that edge under regime shift** (dropping to 49.6%, below chance).
+XGBoost and MLPLOB show comparatively little directional degradation, but
+only because both were already near-random in-sample -- there was no real
+edge to lose. This suggests Ridge's calm-regime performance reflects a real
+but regime-specific pattern rather than a generalizable relationship.
+
+**A second pattern: MLPLOB's error magnitude (R²), not just its directional
+accuracy, degrades sharply under stress** -- from -17.7 same-regime to
+between -24 and -51 across the six stress windows. Directional accuracy
+barely moves, but squared error blows up, consistent with a model producing
+noisy, unstructured predictions that get punished more severely when actual
+price swings are larger (as they are in stress regimes by construction).
+
+**Not all stress windows behaved identically.** The 2024-04-13 to 2024-04-24
+window is a partial exception: Ridge and XGBoost both post their best R²
+scores of the entire experiment there (+0.003 and +0.010 respectively),
+better than their own same-regime numbers. This heterogeneity is reported
+rather than averaged away -- it suggests "stress" is not a monolithic
+condition, and some volatility episodes may retain more learnable structure
+than others.
+
+### Side investigation: does target choice explain the weak return-prediction results?
+
+Motivated by comparing against TLOB's own published results (which show
+genuine skill on order-book classification), a secondary question was
+tested: is next-hour return direction inherently unpredictable at this data
+scale, or was something about the setup (data size, model choice) the real
+bottleneck? Volatility was tested as an alternative target, since it is a
+well-documented predictable quantity in the literature (Corsi 2009's HAR-RV
+model routinely achieves R² of 0.5-0.6 out-of-sample).
+
+Using the identical calm-window training data (521 rows) and the same
+three-model comparison, an HAR-RV baseline (linear regression on lagged
+realized volatility at multiple horizons, following Corsi 2009) achieved
+**same-regime R² = 0.165** in log-volatility space — a genuinely positive
+result, unlike anything obtained for return prediction. This confirms
+target choice, not data size or model architecture, was the primary
+constraint on the earlier return-prediction results.
+
+However, cross-regime performance for the volatility target collapsed even
+more severely than for return prediction (R² as low as -2850 for MLPLOB
+across the six stress windows). Two effects are likely mixed together here:
+genuine model instability on small stress-window samples (241-385 rows,
+single training run), and a metric artifact -- stress windows were selected
+as *sustained* high-volatility stretches, meaning the target has low
+internal variance within each window, which can make R² (whose denominator
+is the target's in-window variance) swing to extreme values even for
+modest absolute prediction errors. Disentangling these two effects
+rigorously (multiple seeds, alternative scale-invariant metrics) was judged
+out of scope for this project, since the core research question --
+regime-shift degradation -- was already answered cleanly by the primary
+return-prediction experiment above.
+
+**Conclusion:** target choice was confirmed as a real factor (volatility
+carries genuine same-regime signal that return direction does not), but
+this doesn't change the project's central finding -- even a target with
+real in-sample predictability shows severe degradation under regime shift,
+reinforcing rather than undermining the core thesis.
+
 ## What I'd try next
 
 _(to be filled in)_
